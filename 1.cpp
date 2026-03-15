@@ -223,7 +223,7 @@ int main()
     SetConsoleCP(65001);
 
     int size = 0;              // текущий размер динамический массива
-    Worker *workers = nullptr; // указатель на динамический
+    Worker *workers = nullptr; // указатель на динамический массив
 
     int choice; ///
     do
