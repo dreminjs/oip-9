@@ -1,5 +1,4 @@
-#ifndef USER_IO_H
-#define USER_IO_H
+#pragma once
 
 #include "worker.h"
 #include <string>
@@ -11,6 +10,6 @@ bool isValidName(const string& str);
 bool inputWorker(Worker &w);
 void printList(const Worker* arr, int size);
 void printTable(const Worker* arr, int size);
-
-#endif // USER_IO_H
-
+void clear(Worker*& arr, int& size);
+bool inputWorker(Worker &w);
+void addWorker(Worker*& arr, int& size);

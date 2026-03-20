@@ -1,5 +1,4 @@
-#ifndef WORKER_H
-#define WORKER_H
+#pragma once
 
 #include <string>
 
@@ -22,5 +21,4 @@ const int W_NAME = 25;
 const int W_EXP = 8;
 const int W_DEPT = 8;
 const int W_JOB = 20;
-
-#endif
+const int W_DATE = 8;

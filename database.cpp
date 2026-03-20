@@ -4,28 +4,25 @@
 using namespace std;
 
 ofstream new_DB(const string& filename) {
+
     ofstream ofs(filename, ios::out | ios::trunc);
+
     if (ofs.fail()) {
+
         cerr << ">>> Ошибка: Не удалось создать файл!" << endl;
     }
+
     return ofs;
+
 }
 
 bool remove_DB(const string& filename) {
-    if (std::remove(filename.c_str()) == 0) {
+    if (std::remove(filename.c_str()) == 0) {   
         return true;
     } else {
         printError(">>> Ошибка удаления");
         return false;
     }
-}
-
-void clear(Worker*& arr, int& size) {
-    if (arr != nullptr) {
-        delete[] arr;
-        arr = nullptr;
-    }
-    size = 0;
 }
 
 void save_DB(const string& filename, const Worker* arr, int size, bool append) {
@@ -49,8 +46,6 @@ void save_DB(const string& filename, const Worker* arr, int size, bool append) {
 }
 
 void append_DB(const string& filename, const Worker* arr, int size) {
-    // Делает "дозапись" корректной для load_DB:
-    // загружает существующее содержимое, добавляет новые записи и перезаписывает файл с обновлённым size.
     Worker* existing = nullptr;
     int existingSize = load_DB(filename, existing);
 
@@ -60,7 +55,7 @@ void append_DB(const string& filename, const Worker* arr, int size) {
     for (int i = 0; i < existingSize; i++) combined[i] = existing[i];
     for (int i = 0; i < size; i++) combined[existingSize + i] = arr[i];
 
-    save_DB(filename, combined, totalSize, false);
+    save_DB(filename, combined, totalSize, true);
 
     clear(existing, existingSize);
     delete[] combined;
