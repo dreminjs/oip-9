@@ -45,7 +45,7 @@ bool inputWorker(Worker &w) {
     if (!isValidName(w.fio.surname)) {
         return printError(">>> Ошибка! Фамилия должна содержать только буквы");
     }
-
+    
     cout << "Введите имя: ";
     cin >> w.fio.name;
     if (!isValidName(w.fio.name)) {
@@ -143,7 +143,6 @@ void printTable(const Worker* arr, int size) {
              << " |" << endl;
     }
     
-    // Нижняя граница
     cout << setfill('-') << setw(totalWidth) << "-" << setfill(' ') << endl;
 }
 

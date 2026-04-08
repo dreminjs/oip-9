@@ -46,6 +46,7 @@ int getMenuChoice(int& choice)
 void handleMenuChoice(int choice, Worker*& workers, int& size, string& dbName)
 {
     switch (choice) {
+        
         case 1: 
             addWorker(workers, size); 
             break;
