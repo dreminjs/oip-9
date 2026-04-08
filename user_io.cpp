@@ -6,75 +6,94 @@
 #include <limits>
 using namespace std;
 
-bool printError(const string &str) {
+bool printError(const string &str)
+{
     cin.clear();
     cin.ignore(10000, '\n');
     cout << str;
     return false;
 }
 
-void clearInput() {
+void clearInput()
+{
     cin.clear();
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
-bool isValidName(const string& str) {
-    if (str.empty()) return false;
-    for (unsigned char c : str) {
-        if (!isalpha(c) && c < 128) return false;
+bool isValidName(const string &str)
+{
+    if (str.empty())
+        return false;
+    for (unsigned char c : str)
+    {
+        if (!isalpha(c) && c < 128)
+            return false;
     }
     return true;
 }
 
-void addWorker(Worker*& arr, int& size) {
-    Worker* temp = new Worker[size + 1];
-    for (int i = 0; i < size; i++) temp[i] = arr[i];
-    
-    if (inputWorker(temp[size])) {
+void addWorker(Worker *&arr, int &size)
+{
+    Worker *temp = new Worker[size + 1];
+    for (int i = 0; i < size; i++)
+        temp[i] = arr[i];
+
+    if (inputWorker(temp[size]))
+    {
         delete[] arr;
         arr = temp;
         size++;
-    } else {
+    }
+    else
+    {
         delete[] temp;
     }
 }
 
-bool inputWorker(Worker &w) {
+bool inputWorker(Worker &w)
+{
     cout << "Введите фамилию: ";
     cin >> w.fio.surname;
-    if (!isValidName(w.fio.surname)) {
+    if (!isValidName(w.fio.surname))
+    {
         return printError(">>> Ошибка! Фамилия должна содержать только буквы");
     }
-    
+
     cout << "Введите имя: ";
     cin >> w.fio.name;
-    if (!isValidName(w.fio.name)) {
+    if (!isValidName(w.fio.name))
+    {
         return printError(">>> Ошибка! Некорректное имя");
     }
 
     cout << "Введите отчество: ";
     cin >> w.fio.patronymic;
-    if (!isValidName(w.fio.patronymic)) {
+    if (!isValidName(w.fio.patronymic))
+    {
         return printError(">>> Ошибка! Некорректное отчество");
     }
 
     cout << "Введите стаж (лет): ";
-    if (!(cin >> w.experience) || w.experience < 0) {
+    if (!(cin >> w.experience) || w.experience < 0)
+    {
         return printError(">>> Ошибка стажа!\n");
     }
 
     cout << "Введите номер отдела: ";
-    if (!(cin >> w.department_number) || w.department_number <= 0) {
+    if (!(cin >> w.department_number) || w.department_number <= 0)
+    {
         return printError(">>> Ошибка отдела!\n");
     }
 
     cout << "Введите год приема: ";
-    if (!(cin >> w.year) || w.year <= 1945 || w.year > 2026) {
+    if (!(cin >> w.year) || w.year <= 1945 || w.year > 2026)
+    {
         return printError(">>> Не корректный год!\n");
     }
 
     cout << "Введите месяц (1-12): ";
-    if (!(cin >> w.month) || w.month < 0 || w.month > 12) {
+    if (!(cin >> w.month) || w.month < 0 || w.month > 12)
+    {
         return printError(">>> Ошибка месяца!\n");
     }
 
@@ -83,28 +102,32 @@ bool inputWorker(Worker &w) {
     int maxDay = daysInMonth[w.month - 1];
 
     cout << "Введите день (1-" << maxDay << "): ";
-    if (!(cin >> w.day) || w.day < 1 || w.day > maxDay) {
+    if (!(cin >> w.day) || w.day < 1 || w.day > maxDay)
+    {
         return printError(">>> Ошибка дня!\n");
     }
 
     cout << "Введите должность: ";
     cin.ignore(10000, '\n');
-    if (!(getline(cin, w.job_title))) {
+    if (!(getline(cin, w.job_title)))
+    {
         return printError(">>> Некорректно веденна должность!\n");
     }
 
     return true;
 }
 
-void clear(Worker*& arr, int& size) {
-    if (arr != nullptr) {
+void clear(Worker *&arr, int &size)
+{
+    if (arr != nullptr)
+    {
         delete[] arr;
         arr = nullptr;
     }
     size = 0;
 }
 
-void printTable(const List& list)
+void printTable(const List &list)
 {
     if (list.size == 0)
     {
@@ -126,13 +149,13 @@ void printTable(const List& list)
 
     cout << setfill('-') << setw(totalWidth) << "-" << setfill(' ') << endl;
 
-    Node* current = list.head;
+    Node *current = list.head;
 
     int i = 1;
 
     while (current)
     {
-        Worker& w = current->data;
+        Worker &w = current->data;
 
         string shortName = w.fio.surname + " " +
                            w.fio.name[0] + "." +
@@ -158,18 +181,20 @@ void printTable(const List& list)
     cout << setfill('-') << setw(totalWidth) << "-" << setfill(' ') << endl;
 }
 
-void printList(List& list, int size) {
-    if (size == 0) {
+void printList(List &list, int size)
+{
+    if (size == 0)
+    {
         std::cout << "\n--- Список пуст ---\n";
         return;
     }
 
-    Node* current = list.head;
+    Node *current = list.head;
 
     int index = 0;
 
-    while (current) {
-        
+    while (current)
+    {
         cout << "\n--- Сотрудник #" << (index + 1) << " ---\n";
         cout << "Фамилия: " << current->data.fio.surname << "\n";
         cout << "Имя: " << current->data.fio.name << "\n";
@@ -179,6 +204,6 @@ void printList(List& list, int size) {
         cout << "Дата приема: " << current->data.day << "." << current->data.month << "." << current->data.year << "\n";
         cout << "Должность: " << current->data.job_title << "\n";
         current = current->prev;
+        index++;
     }
 }
-
