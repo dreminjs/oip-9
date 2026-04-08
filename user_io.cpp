@@ -191,7 +191,7 @@ void printList(List &list, int size)
 
     Node *current = list.head;
 
-    int index = 0;
+    int index = 1;
 
     while (current)
     {
