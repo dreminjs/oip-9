@@ -1,18 +1,18 @@
 #pragma once
 
 #include <string>
-
+using namespace std;
 struct Fullname {
-    std::string surname;
-    std::string name;
-    std::string patronymic;
+    string surname;
+    string name;
+    string patronymic;
 };
 
 struct Worker {
     Fullname fio;
     int experience;
     int department_number;
-    std::string job_title;
+    string job_title;
     int day, month, year;
 };
 

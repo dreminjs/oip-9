@@ -1,9 +1,9 @@
 #include "user_io.h"
+#include "linked_list.h"
 #include <cctype>
 #include <iomanip>
 #include <iostream>
 #include <limits>
-
 using namespace std;
 
 bool printError(const string &str) {
@@ -104,63 +104,81 @@ void clear(Worker*& arr, int& size) {
     size = 0;
 }
 
-void printTable(const Worker* arr, int size) {
-    if (size == 0) {
+void printTable(const List& list)
+{
+    if (list.size == 0)
+    {
         cout << "\n--- Список пуст ---\n";
         return;
     }
-    
+
     int totalWidth = W_NUM + W_NAME + W_EXP + W_DEPT + W_DATE + W_JOB + 13;
-    
+
     cout << setfill('-') << setw(totalWidth) << "-" << setfill(' ') << endl;
-    
-    cout << "| " << setw(W_NUM)  << left  << "№"
-         << " | " << setw(W_NAME) << left  << "ФИО"
-         << " | " << setw(W_EXP)  << right << "Стаж"
+
+    cout << "| " << setw(W_NUM) << left << "№"
+         << " | " << setw(W_NAME) << left << "ФИО"
+         << " | " << setw(W_EXP) << right << "Стаж"
          << " | " << setw(W_DEPT) << right << "Отдел"
-         << " | " << setw(W_DATE) << left  << "Дата"
-         << " | " << setw(W_JOB)  << left  << "Должность"
+         << " | " << setw(W_DATE) << left << "Дата"
+         << " | " << setw(W_JOB) << left << "Должность"
          << " |" << endl;
-    
+
     cout << setfill('-') << setw(totalWidth) << "-" << setfill(' ') << endl;
-    
-    for (int i = 0; i < size; i++) {
-        string shortName = arr[i].fio.surname + " " + 
-                           arr[i].fio.name[0] + "." + 
-                           arr[i].fio.patronymic[0] + ".";
-        
+
+    Node* current = list.head;
+
+    int i = 1;
+
+    while (current)
+    {
+        Worker& w = current->data;
+
+        string shortName = w.fio.surname + " " +
+                           w.fio.name[0] + "." +
+                           w.fio.patronymic[0] + ".";
+
         ostringstream date;
-        date << setw(2) << setfill('0') << arr[i].day << "."
-             << setw(2) << setfill('0') << arr[i].month << "."
-             << setw(4) << arr[i].year;
-        
-        cout << "| " << setw(W_NUM)  << right << i + 1
-             << " | " << setw(W_NAME) << left  << shortName
-             << " | " << setw(W_EXP)  << right << arr[i].experience
-             << " | " << setw(W_DEPT) << right << arr[i].department_number
-             << " | " << setw(W_DATE) << left  << date.str()
-             << " | " << setw(W_JOB)  << left  << arr[i].job_title
+        date << setw(2) << setfill('0') << w.day << "."
+             << setw(2) << setfill('0') << w.month << "."
+             << setw(4) << w.year;
+
+        cout << "| " << setw(W_NUM) << right << i
+             << " | " << setw(W_NAME) << left << shortName
+             << " | " << setw(W_EXP) << right << w.experience
+             << " | " << setw(W_DEPT) << right << w.department_number
+             << " | " << setw(W_DATE) << left << date.str()
+             << " | " << setw(W_JOB) << left << w.job_title
              << " |" << endl;
+
+        current = current->next;
+        i++;
     }
-    
+
     cout << setfill('-') << setw(totalWidth) << "-" << setfill(' ') << endl;
 }
 
-void printList(const Worker* arr, int size) {
+void printList(List& list, int size) {
     if (size == 0) {
         std::cout << "\n--- Список пуст ---\n";
         return;
     }
 
-    for (int i = 0; i < size; i++) {
-        std::cout << "\n--- Сотрудник #" << (i + 1) << " ---\n";
-        std::cout << "Фамилия: " << arr[i].fio.surname << "\n";
-        std::cout << "Имя: " << arr[i].fio.name << "\n";
-        std::cout << "Отчество: " << arr[i].fio.patronymic << "\n";
-        std::cout << "Стаж: " << arr[i].experience << "\n";
-        std::cout << "Номер отдела: " << arr[i].department_number << "\n";
-        std::cout << "Дата приема: " << arr[i].day << "." << arr[i].month << "." << arr[i].year << "\n";
-        std::cout << "Должность: " << arr[i].job_title << "\n";
+    Node* current = list.head;
+
+    int index = 0;
+
+    while (current) {
+        
+        cout << "\n--- Сотрудник #" << (index + 1) << " ---\n";
+        cout << "Фамилия: " << current->data.fio.surname << "\n";
+        cout << "Имя: " << current->data.fio.name << "\n";
+        cout << "Отчество: " << current->data.fio.patronymic << "\n";
+        cout << "Стаж: " << current->data.experience << "\n";
+        cout << "Номер отдела: " << current->data.department_number << "\n";
+        cout << "Дата приема: " << current->data.day << "." << current->data.month << "." << current->data.year << "\n";
+        cout << "Должность: " << current->data.job_title << "\n";
+        current = current->prev;
     }
 }
 
