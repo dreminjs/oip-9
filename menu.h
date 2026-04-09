@@ -1,11 +1,11 @@
 #pragma once
-
+#include "linked_list.h"
 #include <string>
 
 using namespace std;
 
-void printMenu(const std::string& dbName);
+void printMenu(const string& dbName);
 
 int getMenuChoice(int& choice);
 
-void handleMenuChoice(int choice, class Worker*& workers, int& size, std::string& dbName);
+void handleMenuChoice(int choice, List& workers, string& dbName);

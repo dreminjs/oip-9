@@ -3,6 +3,7 @@
 #include "Database.h"
 #include "user_io.h"
 #include "menu.h"
+#include "linked_list.h"
 
 using namespace std;
 
@@ -10,8 +11,7 @@ int main() {
     SetConsoleOutputCP(65001);
     SetConsoleCP(65001);
 
-    Worker* workers = nullptr;
-    int size = 0;
+    List workers;
     string dbName = "database.txt";
     int choice;
 
@@ -20,11 +20,11 @@ int main() {
         getMenuChoice(choice);
         
         if (choice != -1) { 
-            handleMenuChoice(choice, workers, size, dbName);
+            handleMenuChoice(choice, workers, dbName);
         }
         
     } while (choice != 0);
 
-    clear(workers, size);
+    clearList(workers);
     return 0;
 }

@@ -32,21 +32,17 @@ bool isValidName(const string &str)
     return true;
 }
 
-void addWorker(Worker *&arr, int &size)
+void addWorker(List& list)
 {
-    Worker *temp = new Worker[size + 1];
-    for (int i = 0; i < size; i++)
-        temp[i] = arr[i];
-
-    if (inputWorker(temp[size]))
+    Worker w;
+    if (inputWorker(w))
     {
-        delete[] arr;
-        arr = temp;
-        size++;
+        addLast(list, w); 
+        std::cout << "Сотрудник успешно добавлен.\n";
     }
     else
     {
-        delete[] temp;
+        std::cout << "Ошибка ввода данных.\n";
     }
 }
 
@@ -117,17 +113,8 @@ bool inputWorker(Worker &w)
     return true;
 }
 
-void clear(Worker *&arr, int &size)
-{
-    if (arr != nullptr)
-    {
-        delete[] arr;
-        arr = nullptr;
-    }
-    size = 0;
-}
 
-void printTable(const List &list)
+void printTable(const List& list)
 {
     if (list.size == 0)
     {
@@ -181,9 +168,9 @@ void printTable(const List &list)
     cout << setfill('-') << setw(totalWidth) << "-" << setfill(' ') << endl;
 }
 
-void printList(List &list, int size)
+void printList(const List &list)
 {
-    if (size == 0)
+    if (list.size == 0)
     {
         std::cout << "\n--- Список пуст ---\n";
         return;

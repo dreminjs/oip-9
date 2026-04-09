@@ -25,59 +25,57 @@ bool remove_DB(const string& filename) {
     }
 }
 
-void save_DB(const string& filename, const Worker* arr, int size, bool append) {
-    ios::openmode mode = ios::out | (append ? ios::app : ios::trunc);
+void save_DB(const string& filename, const List& list) {
+    ofstream ofs(filename, ios::out | ios::trunc);
+    if (ofs.fail()) return;
 
-    ofstream ofs(filename, mode);
-    if (ofs.fail()) {
-        cerr << ">>> Ошибка при открытии для записи!\n";
-        return;
-    }
-
-    if (!append) ofs << size << "\n";
-
-    for (int i = 0; i < size; i++) {
-        ofs << arr[i].fio.surname << " " << arr[i].fio.name << " " << arr[i].fio.patronymic << "\n";
-        ofs << arr[i].experience << " " << arr[i].department_number << "\n";
-        ofs << arr[i].day << " " << arr[i].month << " " << arr[i].year << "\n";
-        ofs << arr[i].job_title << "\n";
+    ofs << list.size << "\n";
+    Node* curr = list.head;
+    while (curr) {
+        Worker& w = curr->data;
+        ofs << w.fio.surname << " " << w.fio.name << " " << w.fio.patronymic << "\n";
+        ofs << w.experience << " " << w.department_number << "\n";
+        ofs << w.day << " " << w.month << " " << w.year << "\n";
+        ofs << w.job_title << "\n";
+        curr = curr->next;
     }
     ofs.close();
 }
 
-void append_DB(const string& filename, const Worker* arr, int size) {
-    Worker* existing = nullptr;
-    int existingSize = load_DB(filename, existing);
+void append_DB(const string& filename, const List& currentList) {
+    List fileData;
+    initList(fileData);
+    load_DB(filename, fileData); 
 
-    int totalSize = existingSize + size;
-    Worker* combined = (totalSize > 0) ? new Worker[totalSize] : nullptr;
+    Node* curr = currentList.head;
+    while (curr != nullptr) {
+        addLast(fileData, curr->data);
+        curr = curr->next;
+    }
 
-    for (int i = 0; i < existingSize; i++) combined[i] = existing[i];
-    for (int i = 0; i < size; i++) combined[existingSize + i] = arr[i];
+    save_DB(filename, fileData);
 
-    save_DB(filename, combined, totalSize, true);
-
-    clear(existing, existingSize);
-    delete[] combined;
+    clearList(fileData);
 }
 
-int load_DB(const string& filename, Worker*& arr) {
+void load_DB(const string& filename, List& list) { 
     ifstream ifs(filename);
-    if (ifs.fail()) return 0;
+    if (ifs.fail()) return;
 
-    int newSize;
-    if (!(ifs >> newSize)) return 0;
+    clearList(list); 
+    int count;
+    if (!(ifs >> count)) return;
 
-    delete[] arr;
-    arr = new Worker[newSize];
+    list.size = count;
 
-    for (int i = 0; i < newSize; i++) {
-        ifs >> arr[i].fio.surname >> arr[i].fio.name >> arr[i].fio.patronymic;
-        ifs >> arr[i].experience >> arr[i].department_number;
-        ifs >> arr[i].day >> arr[i].month >> arr[i].year;
+    for (int i = 0; i < count; i++) {
+        Worker w;
+        ifs >> w.fio.surname >> w.fio.name >> w.fio.patronymic;
+        ifs >> w.experience >> w.department_number;
+        ifs >> w.day >> w.month >> w.year;
         ifs >> ws;
-        getline(ifs, arr[i].job_title);
+        getline(ifs, w.job_title);
+        addLast(list, w);
     }
     ifs.close();
-    return newSize;
 }
