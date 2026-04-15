@@ -172,7 +172,7 @@ void printList(const List &list)
 {
     if (list.size == 0)
     {
-        std::cout << "\n--- Список пуст ---\n";
+        cout << "\n--- Список пуст ---\n";
         return;
     }
 
@@ -182,7 +182,7 @@ void printList(const List &list)
 
     while (current)
     {
-        cout << "\n--- Сотрудник #" << (index + 1) << " ---\n";
+        cout << "\n--- Сотрудник #" << (index) << " ---\n";
         cout << "Фамилия: " << current->data.fio.surname << "\n";
         cout << "Имя: " << current->data.fio.name << "\n";
         cout << "Отчество: " << current->data.fio.patronymic << "\n";
@@ -190,7 +190,7 @@ void printList(const List &list)
         cout << "Номер отдела: " << current->data.department_number << "\n";
         cout << "Дата приема: " << current->data.day << "." << current->data.month << "." << current->data.year << "\n";
         cout << "Должность: " << current->data.job_title << "\n";
-        current = current->prev;
+        current = current->next;
         index++;
     }
 }

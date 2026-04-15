@@ -26,8 +26,9 @@ Node *getNode(const List &list, int index)
     if (index < 0 || index >= list.size)
         return nullptr;
     Node *curr = list.head;
-    for (int i = 0; i < index; i++)
+    for (int i = 0; i < index; i++) {
         curr = curr->next;
+    }
     return curr;
 }
 
@@ -153,7 +154,6 @@ void swapNodes(List &list, int k, int g)
         nodeK->prev = pG;
         nodeG->next = nK;
         nodeG->prev = pK;
-
         if (pK)
         {
             pK->next = nodeG;

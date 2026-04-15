@@ -42,12 +42,12 @@ void save_DB(const string& filename, const List& list) {
     ofs.close();
 }
 
-void append_DB(const string& filename, const List& currentList) {
+void append_DB(const string& filename, const List& list) {
     List fileData;
     initList(fileData);
     load_DB(filename, fileData); 
 
-    Node* curr = currentList.head;
+    Node* curr = list.head;
     while (curr != nullptr) {
         addLast(fileData, curr->data);
         curr = curr->next;
