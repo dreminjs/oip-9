@@ -1,5 +1,5 @@
 #include "menu.h"
-#include "Database.h"
+#include "database.h"
 #include "user_io.h"
 #include <iostream>
 #include <vector>
@@ -8,24 +8,24 @@
 using namespace std;
 
 vector<string> menuItems = {
-    "Добавить сотрудника в конец",           
-    "Добавить в начало",                     
-    "Добавить ПЕРЕД элементом (по индексу)", 
-    "Добавить ПОСЛЕ элемента (по индексу)",  
-    "Удалить элемент (по индексу)",          
-    "Переставить два элемента (связи)",      
-    "Вывести списком (поле: значение)",      
-    "Вывести таблицу",                       
-    "Сохранить в файл (перезапись)",
-    "Дозапись в файл",
-    "Загрузить из файла",
-    "Сменить имя файла",
-    "Удалить файл БД"
+    "Добавить сотрудника в начало (pushFront)",   
+    "Добавить сотрудника в конец  (pushBack)",    
+    "Извлечь из начала            (popFront)",    
+    "Извлечь из конца             (popBack)",     
+    "Просмотр начала без удаления (front)",       
+    "Просмотр конца без удаления  (back)",        
+    "Вывести деку списком",                       
+    "Вывести деку таблицей",                      
+    "Очистить деку",                              
+    "Сохранить в файл (перезапись)",              
+    "Загрузить из файла",                         
+    "Сменить имя файла",                          
+    "Удалить файл БД"                             
 };
 
 void printMenu(const string& dbName)
 {
-    cout << "\n--- Работа со списком ---";
+    cout << "\n========== Дека сотрудников ==========";
     cout << "\nФайл: " << dbName << "\n";
     for (size_t i = 0; i < menuItems.size(); i++)
     {
@@ -42,69 +42,91 @@ int getMenuChoice(int& choice)
         cout << "\nОшибка: выберите пункт от 0 до " << menuItems.size() << "!\n";
         cin.clear();
         cin.ignore(10000, '\n');
-        return -1; 
+        choice = -1;
+        return -1;
     }
     return choice;
 }
 
-void handleMenuChoice(int choice, List &workers, string &dbName)
+void handleMenuChoice(int choice, Deque& workers, string& dbName)
 {
-    int index, k, g;
     Worker w;
 
     switch (choice)
     {
     case 1:
-        if (inputWorker(w)) addLast(workers, w);
-        break;
-
-    case 2: 
-        if (inputWorker(w)) addFirst(workers, w);
-        break;
-
-    case 3: 
-        cout << "Введите индекс: "; cin >> index;
         if (inputWorker(w)) {
-            if (!addBefore(workers, index, w)) cout << "Ошибка: неверный индекс!\n";
+            pushFront(&workers, w);
+            cout << "Сотрудник добавлен в начало деки.\n";
         }
         break;
 
-    case 4: 
-        cout << "Введите индекс: "; cin >> index;
+    case 2:
         if (inputWorker(w)) {
-            if (!addAfter(workers, index, w)) cout << "Ошибка: неверный индекс!\n";
+            pushBack(&workers, w);
+            cout << "Сотрудник добавлен в конец деки\n";
         }
         break;
 
-    case 5: 
-        cout << "Введите индекс для удаления: "; cin >> index;
-        if (!removeByIndex(workers, index)) cout << "Ошибка: элемент не найден!\n";
+    case 3:
+        if (isEmpty(&workers)) {
+            cout << "Дека пуста\n";
+        } else {
+            w = popFront(&workers);
+            cout << "\nИзвлечён из начала:\n";
+            printWorker(w);
+        }
         break;
 
-    case 6: 
-        cout << "Введите индексы k и g для обмена: ";
-        cin >> k >> g;
-        swapNodes(workers, k, g);
+    case 4:
+        if (isEmpty(&workers)) {
+            cout << "Дека пуста — нечего извлекать.\n";
+        } else {
+            w = popBack(&workers);
+            cout << "\nИзвлечён из конца:\n";
+            printWorker(w);
+        }
         break;
 
-    case 7: 
-        printList(workers);
+    case 5:
+        if (isEmpty(&workers)) {
+            cout << "Дека пуста.\n";
+        } else {
+            cout << "\nНачало деки (без удаления):\n";
+            printWorker(front(&workers));
+        }
         break;
 
-    case 8: 
-        printTable(workers);
+    case 6:
+        if (isEmpty(&workers)) {
+            cout << "Дека пуста\n";
+        } else {
+            cout << "\nКонец деки (без удаления):\n";
+            printWorker(back(&workers));
+        }
+        break;
+
+    case 7:
+        printDeque(&workers);
+        break;
+
+    case 8:
+        printDequeTable(&workers);
         break;
 
     case 9:
-        save_DB(dbName, workers);
+        clear(&workers);
         break;
 
     case 10:
-        append_DB(dbName, workers);
+        save_DB(dbName, workers);
+        cout << "Дека сохранена в файл «" << dbName << "».\n";
         break;
 
     case 11:
         load_DB(dbName, workers);
+        cout << "Дека загружена из файла «" << dbName << "». Элементов: "
+             << getSize(&workers) << "\n";
         break;
 
     case 12:
@@ -113,7 +135,10 @@ void handleMenuChoice(int choice, List &workers, string &dbName)
         break;
 
     case 13:
-        if (remove_DB(dbName)) cout << "Файл удален.\n";
+        if (remove(dbName.c_str()) == 0)
+            cout << "Файл «" << dbName << "» удалён.\n";
+        else
+            cout << "Ошибка удаления файла.\n";
         break;
 
     case 0:

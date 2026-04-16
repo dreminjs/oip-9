@@ -1,23 +1,22 @@
 #include "user_io.h"
-#include "linked_list.h"
+#include "deque.h"
 #include <cctype>
 #include <iomanip>
 #include <iostream>
 #include <limits>
-using namespace std;
 
 bool printError(const string &str)
 {
-    cin.clear();
-    cin.ignore(10000, '\n');
-    cout << str;
+    std::cin.clear();
+    std::cin.ignore(10000, '\n');
+    std::cout << str;
     return false;
 }
 
 void clearInput()
 {
-    cin.clear();
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    std::cin.clear();
+    std::cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
 bool isValidName(const string &str)
@@ -32,12 +31,12 @@ bool isValidName(const string &str)
     return true;
 }
 
-void addWorker(List& list)
+void addWorker(Deque* list)
 {
     Worker w;
     if (inputWorker(w))
     {
-        addLast(list, w); 
+        pushBack(list, w); 
         std::cout << "Сотрудник успешно добавлен.\n";
     }
     else
@@ -114,7 +113,7 @@ bool inputWorker(Worker &w)
 }
 
 
-void printTable(const List& list)
+void printTable(const Deque& list)
 {
     if (list.size == 0)
     {
@@ -168,7 +167,7 @@ void printTable(const List& list)
     cout << setfill('-') << setw(totalWidth) << "-" << setfill(' ') << endl;
 }
 
-void printList(const List &list)
+void printList(const Deque& list)
 {
     if (list.size == 0)
     {

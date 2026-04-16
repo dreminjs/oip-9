@@ -1,81 +1,97 @@
 #include "database.h"
-#include "user_io.h"
+#include <iostream>
 
 using namespace std;
 
+
 ofstream new_DB(const string& filename) {
-
     ofstream ofs(filename, ios::out | ios::trunc);
-
     if (ofs.fail()) {
-
-        cerr << ">>> Ошибка: Не удалось создать файл!" << endl;
+        cerr << "Не удалось создать файл!\n";
     }
-
     return ofs;
-
 }
 
 bool remove_DB(const string& filename) {
-    if (std::remove(filename.c_str()) == 0) {   
+    if (remove(filename.c_str()) == 0) {
         return true;
     } else {
-        printError(">>> Ошибка удаления");
+        cerr << "Ошибка удаления файла\n";
         return false;
     }
 }
 
-void save_DB(const string& filename, const List& list) {
+void save_DB(const string& filename, const Deque& d) {
     ofstream ofs(filename, ios::out | ios::trunc);
-    if (ofs.fail()) return;
+    if (ofs.fail()) {
+        cerr << "не удалось открыть файл для записи!\n";
+        return;
+    }
 
-    ofs << list.size << "\n";
-    Node* curr = list.head;
+    ofs << d.size << "\n";
+
+    Node* curr = d.head;
     while (curr) {
-        Worker& w = curr->data;
-        ofs << w.fio.surname << " " << w.fio.name << " " << w.fio.patronymic << "\n";
-        ofs << w.experience << " " << w.department_number << "\n";
-        ofs << w.day << " " << w.month << " " << w.year << "\n";
+        const Worker& w = curr->data;
+        ofs << w.fio.surname       << " "
+            << w.fio.name          << " "
+            << w.fio.patronymic    << "\n";
+        ofs << w.experience        << " "
+            << w.department_number << "\n";
+        ofs << w.day   << " "
+            << w.month << " "
+            << w.year  << "\n";
         ofs << w.job_title << "\n";
         curr = curr->next;
     }
+
     ofs.close();
 }
 
-void append_DB(const string& filename, const List& list) {
-    List fileData;
-    initList(fileData);
-    load_DB(filename, fileData); 
+void append_DB(const string& filename, const Deque& d) {
+    Deque fileData;
+    init(&fileData);
+    load_DB(filename, fileData);
 
-    Node* curr = list.head;
+    Node* curr = d.head;
     while (curr != nullptr) {
-        addLast(fileData, curr->data);
+        pushBack(&fileData, curr->data);
         curr = curr->next;
     }
 
     save_DB(filename, fileData);
 
-    clearList(fileData);
+    while (!isEmpty(&fileData)) {
+        popFront(&fileData);
+    }
 }
 
-void load_DB(const string& filename, List& list) { 
+void load_DB(const string& filename, Deque& d) {
     ifstream ifs(filename);
-    if (ifs.fail()) return;
+    if (ifs.fail()) {
+        cerr << "файл " << filename << " не найден\n";
+        return;
+    }
 
-    clearList(list); 
-    int count;
-    if (!(ifs >> count)) return;
+    while (!isEmpty(&d)) {
+        popFront(&d);
+    }
 
-    list.size = count;
+    int count = 0;
+    if (!(ifs >> count) || count <= 0) {
+        ifs.close();
+        return;
+    }
 
     for (int i = 0; i < count; i++) {
         Worker w;
         ifs >> w.fio.surname >> w.fio.name >> w.fio.patronymic;
-        ifs >> w.experience >> w.department_number;
+        ifs >> w.experience  >> w.department_number;
         ifs >> w.day >> w.month >> w.year;
-        ifs >> ws;
+        ifs >> ws;                      
         getline(ifs, w.job_title);
-        addLast(list, w);
+        pushBack(&d, w);
     }
+
     ifs.close();
 }
