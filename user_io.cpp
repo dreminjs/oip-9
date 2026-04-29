@@ -5,6 +5,49 @@
 #include <iostream>
 #include <limits>
 
+int visibleLen(const string& s)
+{
+    int len = 0;
+    int i   = 0;
+    while (i < (int)s.size())
+    {
+        unsigned char c = s[i];
+        if (c < 0x80)
+        {
+            i   += 1;   
+            len += 1;   
+        }
+        else if (c < 0xE0)
+        {
+            i   += 2;   
+            len += 1;   
+        }
+        else if (c < 0xF0)
+        {
+            i   += 3;   
+            len += 1;   
+        }
+        else
+        {
+            i   += 4;   
+            len += 2;   
+        }
+    }
+    return len;
+}
+
+string padRight(const string& s, int width)
+{
+    int pad = width - visibleLen(s);
+    return s + string(max(pad, 0), ' ');
+}
+
+string padLeft(const string& s, int width)
+{
+    int pad = width - visibleLen(s);
+    return string(max(pad, 0), ' ') + s;
+}
+
 bool printError(const string &str)
 {
     std::cin.clear();
@@ -112,84 +155,3 @@ bool inputWorker(Worker &w)
     return true;
 }
 
-
-void printTable(const Deque& list)
-{
-    if (list.size == 0)
-    {
-        cout << "\n--- Список пуст ---\n";
-        return;
-    }
-
-    int totalWidth = W_NUM + W_NAME + W_EXP + W_DEPT + W_DATE + W_JOB + 13;
-
-    cout << setfill('-') << setw(totalWidth) << "-" << setfill(' ') << endl;
-
-    cout << "| " << setw(W_NUM) << left << "№"
-         << " | " << setw(W_NAME) << left << "ФИО"
-         << " | " << setw(W_EXP) << right << "Стаж"
-         << " | " << setw(W_DEPT) << right << "Отдел"
-         << " | " << setw(W_DATE) << left << "Дата"
-         << " | " << setw(W_JOB) << left << "Должность"
-         << " |" << endl;
-
-    cout << setfill('-') << setw(totalWidth) << "-" << setfill(' ') << endl;
-
-    Node *current = list.head;
-
-    int i = 1;
-
-    while (current)
-    {
-        Worker &w = current->data;
-
-        string shortName = w.fio.surname + " " +
-                           w.fio.name[0] + "." +
-                           w.fio.patronymic[0] + ".";
-
-        ostringstream date;
-        date << setw(2) << setfill('0') << w.day << "."
-             << setw(2) << setfill('0') << w.month << "."
-             << setw(4) << w.year;
-
-        cout << "| " << setw(W_NUM) << right << i
-             << " | " << setw(W_NAME) << left << shortName
-             << " | " << setw(W_EXP) << right << w.experience
-             << " | " << setw(W_DEPT) << right << w.department_number
-             << " | " << setw(W_DATE) << left << date.str()
-             << " | " << setw(W_JOB) << left << w.job_title
-             << " |" << endl;
-
-        current = current->next;
-        i++;
-    }
-
-    cout << setfill('-') << setw(totalWidth) << "-" << setfill(' ') << endl;
-}
-
-void printList(const Deque& list)
-{
-    if (list.size == 0)
-    {
-        cout << "\n--- Список пуст ---\n";
-        return;
-    }
-
-    Node *current = list.head;
-
-    int index = 1;
-
-    while (current)
-    {
-        cout << "\n--- Сотрудник #" << (index) << " ---\n";
-        cout << "Фамилия: " << current->data.fio.surname << "\n";
-        cout << "Имя: " << current->data.fio.name << "\n";
-        cout << "Отчество: " << current->data.fio.patronymic << "\n";
-        cout << "Стаж: " << current->data.experience << "\n";
-        cout << "Номер отдела: " << current->data.department_number << "\n";
-        cout << "Дата приема: " << current->data.day << "." << current->data.month << "." << current->data.year << "\n";
-        cout << "Должность: " << current->data.job_title << "\n";
-        current = current->next;
-        index++;
-    }
-}

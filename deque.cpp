@@ -1,8 +1,9 @@
 #include "deque.h"
+#include "user_io.h"
+#include "worker.h"
 #include <iostream>
 #include <iomanip>
 #include <sstream>
-
 using namespace std;
 
 void init(Deque* d) {
@@ -36,7 +37,6 @@ void pushFront(Deque* d, const Worker& w) {
     d->size++;
 }
 
-
 void pushBack(Deque* d, const Worker& w) {
     if (!d) return;
 
@@ -63,7 +63,7 @@ Worker popFront(Deque* d) {
 
     d->head = d->head->next;
 
-    if (d->head) {
+    if ((*d).head) {
         d->head->prev = nullptr;
     } else {
         d->tail = nullptr;         
@@ -99,7 +99,7 @@ Worker popBack(Deque* d) {
 
 const Worker& front(const Deque* d) {
     if (!d || isEmpty(d)) {
-        cerr << ">>> Ошибка: дека пуста (front)!\n";
+        cerr << "дека пуста!\n";
         static Worker dummy{};
         return dummy;
     }
@@ -108,7 +108,7 @@ const Worker& front(const Deque* d) {
 
 const Worker& back(const Deque* d) {
     if (!d || isEmpty(d)) {
-        cerr << ">>> Ошибка: дека пуста (back)!\n";
+        cerr << "дека пуста!\n";
         static Worker dummy{};
         return dummy;
     }
@@ -120,7 +120,7 @@ void clear(Deque* d) {
     if (!d) return;
 
     if (isEmpty(d)) {
-        cout << "Дека уже пуста.\n";
+        cout << "Дека уже пуста\n";
         return;
     }
 
@@ -171,38 +171,35 @@ void printDeque(const Deque* d) {
     cout << "============================\n";
 }
 
-void printDequeTable(const Deque* d) {
-    if (!d || isEmpty(d)) {
-        cout << "\n--- Дека пуста ---\n";
+void printDequeTable(const Deque* list)
+{
+    if ((*list).size == 0)
+    {
+        cout << "\n--- Список пуст ---\n";
         return;
     }
 
-    const int W_NUM  = 4;
-    const int W_NAME = 25;
-    const int W_EXP  = 8;
-    const int W_DEPT = 8;
-    const int W_DATE = 10;
-    const int W_JOB  = 20;
+    int totalWidth = W_NUM + W_NAME + W_EXP + W_DEPT + W_DATE + W_JOB + 19;
+    string sep(totalWidth, '-');
 
-    int totalWidth = W_NUM + W_NAME + W_EXP + W_DEPT + W_DATE + W_JOB + 13;
+    cout << sep << endl;
 
-    cout << setfill('-') << setw(totalWidth) << "-" << setfill(' ') << "\n";
+    cout << "| " << padLeft ("№",          W_NUM)
+         << " | " << padRight("ФИО",        W_NAME)
+         << " | " << padLeft ("Стаж",       W_EXP)
+         << " | " << padLeft ("Отдел",      W_DEPT)
+         << " | " << padRight("Дата",       W_DATE)
+         << " | " << padRight("Должность",  W_JOB)
+         << " |" << endl;
 
-    cout << "| " << setw(W_NUM)  << left  << "№"
-         << " | " << setw(W_NAME) << left  << "ФИО"
-         << " | " << setw(W_EXP)  << right << "Стаж"
-         << " | " << setw(W_DEPT) << right << "Отдел"
-         << " | " << setw(W_DATE) << left  << "Дата"
-         << " | " << setw(W_JOB)  << left  << "Должность"
-         << " |\n";
+    cout << sep << endl;
 
-    cout << setfill('-') << setw(totalWidth) << "-" << setfill(' ') << "\n";
-
-    Node* current = d->head;
-    int   i       = 1;
-
-    while (current) {
-        const Worker& w = current->data;
+    Node* current = (*list).head;
+    int i = 1;
+    
+    while (current)
+    {
+        Worker& w = current->data;
 
         string shortName = w.fio.surname + " " +
                            w.fio.name[0] + "." +
@@ -211,19 +208,19 @@ void printDequeTable(const Deque* d) {
         ostringstream date;
         date << setw(2) << setfill('0') << w.day   << "."
              << setw(2) << setfill('0') << w.month << "."
-             << setw(4) << setfill(' ') << w.year;
+             << setw(4) << setfill('0') << w.year;
 
-        cout << "| " << setw(W_NUM)  << right << i
-             << " | " << setw(W_NAME) << left  << shortName
-             << " | " << setw(W_EXP)  << right << w.experience
-             << " | " << setw(W_DEPT) << right << w.department_number
-             << " | " << setw(W_DATE) << left  << date.str()
-             << " | " << setw(W_JOB)  << left  << w.job_title
-             << " |\n";
+        cout << "| " << padLeft (to_string(i),              W_NUM)
+             << " | " << padRight(shortName,                 W_NAME)
+             << " | " << padLeft (to_string(w.experience),   W_EXP)
+             << " | " << padLeft (to_string(w.department_number), W_DEPT)
+             << " | " << padRight(date.str(),                W_DATE)
+             << " | " << padRight(w.job_title,               W_JOB)
+             << " |" << endl;
 
         current = current->next;
         i++;
     }
 
-    cout << setfill('-') << setw(totalWidth) << "-" << setfill(' ') << "\n";
+    cout << sep << endl;
 }

@@ -29,5 +29,5 @@ const Worker& back (const Deque* d);
 void clear(Deque* d);
 void printWorker    (const Worker& w);
 void printDeque     (const Deque* d);
-void printDequeTable(const Deque* d);
+void printDequeTable(const Deque* list);
  

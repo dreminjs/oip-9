@@ -21,4 +21,4 @@ const int W_NAME = 25;
 const int W_EXP = 8;
 const int W_DEPT = 8;
 const int W_JOB = 20;
-const int W_DATE = 8;
+const int W_DATE = 10;
