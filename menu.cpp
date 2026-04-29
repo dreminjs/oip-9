@@ -1,6 +1,7 @@
 #include "menu.h"
 #include "database.h"
 #include "user_io.h"
+#include "sort.h"
 #include <iostream>
 #include <vector>
 #include <string>
@@ -8,19 +9,22 @@
 using namespace std;
 
 vector<string> menuItems = {
-    "Добавить сотрудника в начало (pushFront)",   
-    "Добавить сотрудника в конец  (pushBack)",    
-    "Извлечь из начала            (popFront)",    
-    "Извлечь из конца             (popBack)",     
-    "Просмотр начала без удаления (front)",       
-    "Просмотр конца без удаления  (back)",        
-    "Вывести деку списком",                       
-    "Вывести деку таблицей",                      
-    "Очистить деку",                              
-    "Сохранить в файл (перезапись)",              
-    "Загрузить из файла",                         
-    "Сменить имя файла",                          
-    "Удалить файл БД"                             
+    "Добавить сотрудника в начало (pushFront)",    //  1
+    "Добавить сотрудника в конец  (pushBack)",     //  2
+    "Извлечь из начала            (popFront)",     //  3
+    "Извлечь из конца             (popBack)",      //  4
+    "Просмотр начала без удаления (front)",        //  5
+    "Просмотр конца без удаления  (back)",         //  6
+    "Вывести деку списком",                        //  7
+    "Вывести деку таблицей",                       //  8
+    "Очистить деку",                               //  9
+    "Сохранить в файл (перезапись)",               // 10
+    "Загрузить из файла",                          // 11
+    "Сменить имя файла",                           // 12
+    "Удалить файл БД",                             // 13
+    "Сортировка вставками",                        // 14
+    "Быстрая сортировка (Хоара)",                  // 15
+    "Загрузить тестовые данные"                    // 16
 };
 
 void printMenu(const string& dbName)
@@ -46,6 +50,36 @@ int getMenuChoice(int& choice)
         return -1;
     }
     return choice;
+}
+
+static bool askSortParams(SortField& field, bool& ascending)
+{
+    int fieldChoice = 0;
+    cout << "\nВыберите поле сортировки:\n"
+         << "  1 — Фамилия (строковое)\n"
+         << "  2 — Стаж    (числовое)\n"
+         << "Выбор: ";
+    if (!(cin >> fieldChoice) || (fieldChoice != 1 && fieldChoice != 2)) {
+        cout << "Неверный выбор поля!\n";
+        cin.clear();
+        cin.ignore(10000, '\n');
+        return false;
+    }
+    field = (fieldChoice == 1) ? FIELD_SURNAME : FIELD_EXPERIENCE;
+
+    int orderChoice = 0;
+    cout << "Порядок сортировки:\n"
+         << "  1 — По возрастанию\n"
+         << "  2 — По убыванию\n"
+         << "Выбор: ";
+    if (!(cin >> orderChoice) || (orderChoice != 1 && orderChoice != 2)) {
+        cout << "Неверный выбор порядка!\n";
+        cin.clear();
+        cin.ignore(10000, '\n');
+        return false;
+    }
+    ascending = (orderChoice == 1);
+    return true;
 }
 
 void handleMenuChoice(int choice, Deque& workers, string& dbName)
@@ -139,6 +173,53 @@ void handleMenuChoice(int choice, Deque& workers, string& dbName)
             cout << "Файл «" << dbName << "» удалён.\n";
         else
             cout << "Ошибка удаления файла.\n";
+        break;
+
+    case 14: {
+        if (isEmpty(&workers)) {
+            cout << "Дека пуста — нечего сортировать.\n";
+            break;
+        }
+        SortField field;
+        bool      ascending;
+        if (!askSortParams(field, ascending)) break;
+
+        cout << "\nДо сортировки:\n";
+        printDequeTable(&workers);
+
+        sortDequeInsertion(&workers, field, ascending);
+
+        cout << "\nПосле сортировки вставками ("
+             << (field == FIELD_SURNAME ? "фамилия" : "стаж") << ", "
+             << (ascending ? "по возрастанию" : "по убыванию") << "):\n";
+        printDequeTable(&workers);
+        break;
+    }
+    case 15: {
+        if (isEmpty(&workers)) {
+            cout << "Дека пуста — нечего сортировать.\n";
+            break;
+        }
+        SortField field;
+        bool      ascending;
+        if (!askSortParams(field, ascending)) break;
+
+        cout << "\nДо сортировки:\n";
+        printDequeTable(&workers);
+
+        sortDequeQuick(&workers, field, ascending);
+
+        cout << "\nПосле быстрой сортировки Хоара ("
+             << (field == FIELD_SURNAME ? "фамилия" : "стаж") << ", "
+             << (ascending ? "по возрастанию" : "по убыванию") << "):\n";
+        printDequeTable(&workers);
+        break;
+    }
+
+    case 16:
+        loadSampleData(&workers);
+        cout << "Текущая дека:\n";
+        printDequeTable(&workers);
         break;
 
     case 0:
