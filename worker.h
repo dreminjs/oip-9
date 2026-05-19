@@ -8,13 +8,13 @@ struct Fullname {
     string patronymic;
 };
 
-struct Worker {
-    Fullname fio;
-    int experience;
-    int department_number;
-    string job_title;
-    int day, month, year;
-};
+    struct Worker {
+        Fullname fio;
+        int experience;
+        int department_number;
+        string job_title;
+        int day, month, year;
+    };
 
 const int W_NUM = 4;
 const int W_NAME = 25;

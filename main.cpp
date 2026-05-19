@@ -1,6 +1,6 @@
 #include <iostream>
 #include <windows.h>
-#include "deque.h"
+#include "linkedList.h"
 #include "database.h"
 #include "user_io.h"
 #include "menu.h"
@@ -11,7 +11,7 @@ int main() {
     SetConsoleOutputCP(65001);
     SetConsoleCP(65001);
  
-    Deque workers;
+    LinkedList workers;
     init(&workers);
     string dbName = "database.txt";
     int choice;

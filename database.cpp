@@ -21,7 +21,7 @@ bool remove_DB(const string& filename) {
     }
 }
 
-void save_DB(const string& filename, const Deque& d) {
+void save_DB(const string& filename, const LinkedList& d) {
     ofstream ofs(filename, ios::out | ios::trunc);
     if (ofs.fail()) {
         cerr << "не удалось открыть файл для записи!\n";
@@ -48,8 +48,8 @@ void save_DB(const string& filename, const Deque& d) {
     ofs.close();
 }
 
-void append_DB(const string& filename, const Deque& d) {
-    Deque fileData;
+void append_DB(const string& filename, const LinkedList& d) {
+    LinkedList fileData;
     init(&fileData);
     load_DB(filename, fileData);
 
@@ -66,7 +66,7 @@ void append_DB(const string& filename, const Deque& d) {
     }
 }
 
-void load_DB(const string& filename, Deque& d) {
+void load_DB(const string& filename, LinkedList& d) {
     ifstream ifs(filename);
     if (ifs.fail()) {
         cerr << "файл " << filename << " не найден\n";

@@ -1,10 +1,10 @@
 #include "user_io.h"
-#include "deque.h"
+#include "linkedList.h"
 #include <cctype>
 #include <iomanip>
 #include <iostream>
 #include <limits>
-
+using namespace std;
 int visibleLen(const string& s)
 {
     int len = 0;
@@ -50,66 +50,59 @@ string padLeft(const string& s, int width)
 
 bool printError(const string &str)
 {
-    std::cin.clear();
-    std::cin.ignore(10000, '\n');
-    std::cout << str;
+    cin.clear();
+    cin.ignore(10000, '\n');
+    cout << str;
     return false;
 }
 
 void clearInput()
 {
-    std::cin.clear();
-    std::cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cin.clear();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
-bool isValidName(const string &str)
-{
-    if (str.empty())
-        return false;
-    for (unsigned char c : str)
-    {
-        if (!isalpha(c) && c < 128)
-            return false;
+bool isValidName(const string &str) {
+    if (str.empty()) return false;
+    if (str.length() < 2 || str.length() > 50) return false;
+    
+    for (unsigned char c : str) {
+        if (c < 128 && !isalpha(c)) return false;
     }
     return true;
 }
-
-void addWorker(Deque* list)
+void addWorker(LinkedList* list)
 {
     Worker w;
     if (inputWorker(w))
     {
         pushBack(list, w); 
-        std::cout << "Сотрудник успешно добавлен.\n";
+        cout << "Сотрудник успешно добавлен.\n";
     }
     else
     {
-        std::cout << "Ошибка ввода данных.\n";
+        cout << "Ошибка ввода данных.\n";
     }
 }
 
 bool inputWorker(Worker &w)
 {
     cout << "Введите фамилию: ";
-    cin >> w.fio.surname;
-    if (!isValidName(w.fio.surname))
+    getline(cin >> ws, w.fio.surname);
+    if (w.fio.surname.empty() || !isValidName(w.fio.surname))
     {
         return printError(">>> Ошибка! Фамилия должна содержать только буквы");
     }
 
     cout << "Введите имя: ";
-    cin >> w.fio.name;
-    if (!isValidName(w.fio.name))
+    getline(cin >> ws, w.fio.name);
+    if (w.fio.name.empty() || !isValidName(w.fio.name))
     {
         return printError(">>> Ошибка! Некорректное имя");
     }
 
-    cout << "Введите отчество: ";
-    cin >> w.fio.patronymic;
-    if (!isValidName(w.fio.patronymic))
-    {
-        return printError(">>> Ошибка! Некорректное отчество");
-    }
+    cout << "Введите отчество: (Если у вас нет Отчества то просто -) ";
+    getline(cin >> ws, w.fio.patronymic);
 
     cout << "Введите стаж (лет): ";
     if (!(cin >> w.experience) || w.experience < 0)
@@ -165,7 +158,7 @@ void clear(Worker *&arr, int &size)
     size = 0;
 }
 
-void printTable(const Deque &list)
+void printTable(const LinkedList &list)
 {
     if (list.size == 0)
     {
@@ -219,11 +212,11 @@ void printTable(const Deque &list)
     cout << setfill('-') << setw(totalWidth) << "-" << setfill(' ') << endl;
 }
 
-void printList(Deque &list)
+void printList(LinkedList &list)
 {
     if (list.size == 0)
     {
-        std::cout << "\n--- Список пуст ---\n";
+        cout << "\n--- Список пуст ---\n";
         return;
     }
 
@@ -233,15 +226,16 @@ void printList(Deque &list)
 
     while (current)
     {
+        Worker& currentWorker = (current->data);
         cout << "\n--- Сотрудник #" << (index + 1) << " ---\n";
-        cout << "Фамилия: " << current->data.fio.surname << "\n";
-        cout << "Имя: " << current->data.fio.name << "\n";
-        cout << "Отчество: " << current->data.fio.patronymic << "\n";
-        cout << "Стаж: " << current->data.experience << "\n";
-        cout << "Номер отдела: " << current->data.department_number << "\n";
-        cout << "Дата приема: " << current->data.day << "." << current->data.month << "." << current->data.year << "\n";
-        cout << "Должность: " << current->data.job_title << "\n";
-        current = current->prev;
+        cout << "Фамилия: " << currentWorker.fio.surname << "\n";
+        cout << "Имя: " << currentWorker.fio.name << "\n";
+        cout << "Отчество: " << currentWorker.fio.patronymic << "\n";
+        cout << "Стаж: " << currentWorker.experience << "\n";
+        cout << "Номер отдела: " << currentWorker.department_number << "\n";
+        cout << "Дата приема: " << currentWorker.day << "." << currentWorker.month << "." << currentWorker.year << "\n";
+        cout << "Должность: " << currentWorker.job_title << "\n";
+        current = current->next;
         index++;
     }
 }

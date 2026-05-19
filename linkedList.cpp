@@ -1,4 +1,4 @@
-#include "deque.h"
+#include "linkedList.h"
 #include "user_io.h"
 #include "worker.h"
 #include <iostream>
@@ -6,26 +6,29 @@
 #include <sstream>
 using namespace std;
 
-void init(Deque* d) {
+void init(LinkedList* d) {
     if (!d) return;
     d->head = nullptr;
     d->tail = nullptr;
     d->size = 0;
 }
 
-bool isEmpty(const Deque* d) {
+bool isEmpty(const LinkedList* d) {
     return !d || d->size == 0 || d->head == nullptr;
 }
 
-int getSize(const Deque* d) {
+int getSize(const LinkedList* d) {
     return d ? d->size : 0;
 }
 
 
-void pushFront(Deque* d, const Worker& w) {
+void pushFront(LinkedList* d, const Worker& w) {
     if (!d) return;
 
-    Node* newNode = new Node(w);
+    Node* newNode = new Node; 
+    newNode->data = w;        
+    newNode->next = nullptr;  
+    newNode->prev = nullptr;
 
     if (isEmpty(d)) {
         d->head = d->tail = newNode;
@@ -37,10 +40,13 @@ void pushFront(Deque* d, const Worker& w) {
     d->size++;
 }
 
-void pushBack(Deque* d, const Worker& w) {
+void pushBack(LinkedList* d, const Worker& w) {
     if (!d) return;
 
-    Node* newNode = new Node(w);
+    Node* newNode = new Node; 
+    newNode->data = w;
+    newNode->next = nullptr;
+    newNode->prev = nullptr;
 
     if (isEmpty(d)) {
         d->head = d->tail = newNode;
@@ -52,7 +58,7 @@ void pushBack(Deque* d, const Worker& w) {
     d->size++;
 }
 
-Worker popFront(Deque* d) {
+Worker popFront(LinkedList* d) {
     if (!d || isEmpty(d)) {
         cerr << " дека пуста!\n";
         return Worker{};
@@ -74,7 +80,7 @@ Worker popFront(Deque* d) {
     return value;
 }
 
-Worker popBack(Deque* d) {
+Worker popBack(LinkedList* d) {
     if (!d || isEmpty(d)) {
         cerr << "Дека пустая\n";
         return Worker{};
@@ -97,7 +103,7 @@ Worker popBack(Deque* d) {
 }
 
 
-const Worker& front(const Deque* d) {
+const Worker& front(const LinkedList* d) {
     if (!d || isEmpty(d)) {
         cerr << "дека пуста!\n";
         static Worker dummy{};
@@ -106,7 +112,7 @@ const Worker& front(const Deque* d) {
     return d->head->data;
 }
 
-const Worker& back(const Deque* d) {
+const Worker& back(const LinkedList* d) {
     if (!d || isEmpty(d)) {
         cerr << "дека пуста!\n";
         static Worker dummy{};
@@ -116,7 +122,7 @@ const Worker& back(const Deque* d) {
 }
 
 
-void clear(Deque* d) {
+void clear(LinkedList* d) {
     if (!d) return;
 
     if (isEmpty(d)) {
@@ -147,13 +153,13 @@ void printWorker(const Worker& w) {
     cout << "-----------------------------\n";
 }
 
-void printDeque(const Deque* d) {
+void printLinkedList(const LinkedList* d) {
     if (!d || isEmpty(d)) {
-        cout << "Дека пуста.\n";
+        cout << "Список пуст.\n";
         return;
     }
 
-    cout << "\n Размер деки: " << d->size << "\n";
+    cout << "\n Размер списка: " << d->size << "\n";
     Node* current = d->head;
     int   index   = 0;
     while (current) {
@@ -171,7 +177,7 @@ void printDeque(const Deque* d) {
     cout << "============================\n";
 }
 
-void printDequeTable(const Deque* list)
+void printLinkedListTable(const LinkedList* list)
 {
     if ((*list).size == 0)
     {
@@ -202,8 +208,8 @@ void printDequeTable(const Deque* list)
         Worker& w = current->data;
 
         string shortName = w.fio.surname + " " +
-                           w.fio.name[0] + "." +
-                           w.fio.patronymic[0] + ".";
+                           w.fio.name.substr(0, 2) + "." +
+                           w.fio.patronymic.substr(0, 2) + ".";
 
         ostringstream date;
         date << setw(2) << setfill('0') << w.day   << "."

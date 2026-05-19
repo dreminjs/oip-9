@@ -1,5 +1,5 @@
 #pragma once
-#include "deque.h"
+#include "linkedList.h"
 #include "worker.h"
 #include <string>
 using namespace std;
@@ -9,7 +9,7 @@ void clearInput();
 bool isValidName(const string& str);
 bool inputWorker(Worker &w);
 bool inputWorker(Worker &w);
-void addWorker(Deque* list);
+void addWorker(LinkedList* list);
 int visibleLen(const string& s);
 string padRight(const string& s, int width);
 string padLeft(const string& s, int width);
