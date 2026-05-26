@@ -41,7 +41,7 @@ int cmpWorkers(const Worker &a, const Worker &b, SortField field, bool ascending
     int result = 0;
 
     if (field == FIELD_SURNAME) {
-        result = a.fio.surname.compare(b.fio.surname); // САМИМ
+        result = a.fio.surname.compare(b.fio.surname);
     }
     else
     {
@@ -78,41 +78,41 @@ void insertionSort(Worker *arr, int size, SortField field, bool ascending)
     }
 }
 
-int hoarePartition(Worker *arr, int left, int right, SortField field, bool ascending)
-{
-    Worker pivot = arr[(left + right) / 2];
-    int i = left - 1;
-    int j = right + 1;
-
-    while (true)
+    int hoarePartition(Worker *arr, int left, int right, SortField field, bool ascending)
     {
-        do
-        {
-            ++i;
-        } while (cmpWorkers(arr[i], pivot, field, ascending) < 0);
-        do
-        {
-            --j;
-        } while (cmpWorkers(arr[j], pivot, field, ascending) > 0);
+        Worker pivot = arr[(left + right) / 2];
+        int i = left - 1;
+        int j = right + 1;
 
-        if (i >= j) {
+        while (true)
+        {
+            do
+            {
+                ++i;
+            } while (cmpWorkers(arr[i], pivot, field, ascending) < 0);
+            do
+            {
+                --j;
+            } while (cmpWorkers(arr[j], pivot, field, ascending) > 0);
 
-            return j;
+            if (i >= j) {
+
+                return j;
+            }
+
+            swap(arr[i], arr[j]);
         }
-
-        swap(arr[i], arr[j]);
     }
-}
 
-void quickSort(Worker *arr, int left, int right, SortField field, bool ascending)
-{
-    if (left < right)
+    void quickSort(Worker *arr, int left, int right, SortField field, bool ascending)
     {
-        int p = hoarePartition(arr, left, right, field, ascending);
-        quickSort(arr, left, p, field, ascending);
-        quickSort(arr, p + 1, right, field, ascending);
+        if (left < right)
+        {
+            int p = hoarePartition(arr, left, right, field, ascending);
+            quickSort(arr, left, p, field, ascending);
+            quickSort(arr, p + 1, right, field, ascending);
+        }
     }
-}
 
 void sortDequeInsertion(LinkedList *d, SortField field, bool ascending)
 {

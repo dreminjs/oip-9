@@ -60,7 +60,7 @@ void pushBack(LinkedList* d, const Worker& w) {
 
 Worker popFront(LinkedList* d) {
     if (!d || isEmpty(d)) {
-        cerr << " дека пуста!\n";
+        cerr << "Список пуст!\n";
         return Worker{};
     }
 
@@ -82,7 +82,7 @@ Worker popFront(LinkedList* d) {
 
 Worker popBack(LinkedList* d) {
     if (!d || isEmpty(d)) {
-        cerr << "Дека пустая\n";
+        cerr << "Список пуст\n";
         return Worker{};
     }
 
@@ -105,7 +105,7 @@ Worker popBack(LinkedList* d) {
 
 const Worker& front(const LinkedList* d) {
     if (!d || isEmpty(d)) {
-        cerr << "дека пуста!\n";
+        cerr << "Список пуст!\n";
         static Worker dummy{};
         return dummy;
     }
@@ -114,7 +114,7 @@ const Worker& front(const LinkedList* d) {
 
 const Worker& back(const LinkedList* d) {
     if (!d || isEmpty(d)) {
-        cerr << "дека пуста!\n";
+        cerr << "Список пуст!\n";
         static Worker dummy{};
         return dummy;
     }
@@ -126,16 +126,16 @@ void clear(LinkedList* d) {
     if (!d) return;
 
     if (isEmpty(d)) {
-        cout << "Дека уже пуста\n";
+        cout << "Список пуст\n";
         return;
     }
 
-    cout << "\nОчистка деки Извлечённые элементы:\n";
+    cout << "\nОчистка списка Извлечённые элементы:\n";
     while (!isEmpty(d)) {
         Worker w = popFront(d);
         printWorker(w);
     }
-    cout << "Дека очищена\n";
+    cout << "Список пуст\n";
 }
 
 void printWorker(const Worker& w) {

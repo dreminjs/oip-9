@@ -10,7 +10,6 @@ string toLowerStr(const string& s);
 
 string getFirstCharStr(const string& s);
 
-
 Node** linearSearchByJob (LinkedList* d, const string& jobTitle, int& count);
 Node** linearSearchByDept(LinkedList* d, int dept,               int& count);
 

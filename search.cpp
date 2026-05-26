@@ -110,7 +110,7 @@ Node* binarySearchBySurname(LinkedList* d, const string& surname, bool& isSorted
     if (!d || isEmpty(d)) return nullptr;
 
     if (!isSorted) {
-        cout << "  [Дека не отсортирована по фамилии. Выполняется сортировка...]\n";
+        cout << "  [Список не отсортирован по фамилии. Выполняется сортировка...]\n";
         sortDequeInsertion(d, FIELD_SURNAME, true);
         isSorted = true;
         cout << "  [Сортировка завершена.]\n";
@@ -287,7 +287,7 @@ void editOrDeleteFound(LinkedList* d, Node** found, int count)
         cout << "\n--- Элемент " << (i + 1) << " из " << count << " ---\n";
         printWorker(found[i]->data);
         cout << "  1 — Редактировать\n"
-             << "  2 — Удалить из деки\n"
+             << "  2 — Удалить из списка\n"
              << "  0 — Пропустить\n"
              << "  Действие: ";
 
@@ -313,7 +313,7 @@ void editOrDeleteFound(LinkedList* d, Node** found, int count)
         case 2:
             removeNode(d, found[i]);
             found[i] = nullptr;
-            cout << "  Элемент удалён из деки.\n";
+            cout << "  Элемент удалён из списка.\n";
             break;
         case 0:
         default:
